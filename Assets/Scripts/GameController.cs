@@ -14,11 +14,18 @@ public class GameController : MonoBehaviour
     public GameObject resetButton;
     private float time;
     private string[] wordsLocal = { "MATT", "JOANNE", "ROBERT", "MARRY JANE" };
-    private string[] words = File.ReadAllLines(@"Assets/words.txt");
     private string chosenWord;
     private string hiddenWord;
     private int fails;
     private bool gameEnd;
+    private string[] words;
+
+    private void Awake()
+    {
+        TextAsset mytxtData=(TextAsset)Resources.Load("words");
+        string txt=mytxtData.text;
+        words = txt.Split('\n');
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -61,7 +68,17 @@ public class GameController : MonoBehaviour
 
             if (chosenWord.Contains(pressedLetter))
             {
-                int pressedIndex = chosenWord.IndexOf(pressedLetter);
+                int pressedIndex;
+                if (chosenWord.IndexOf(pressedLetter) == null)
+                {
+                    Debug.Log("null");
+                    pressedIndex = -1;
+                }
+                else
+                {
+                    Debug.Log("not null");
+                    pressedIndex = chosenWord.IndexOf(pressedLetter);
+                }
                 while(pressedIndex != -1)
                 {
                     hiddenWord = hiddenWord.Substring(0, pressedIndex) + pressedLetter + hiddenWord.Substring(pressedIndex + 1);
